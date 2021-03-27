@@ -15,6 +15,19 @@
  <p>{{ $message }}</p>
  </div>
  @endif
+
+ <p>Cari Data Mahasiswa :</p>
+	 <form action="{{ url()->current() }}">
+    <div class="float-right my-2">
+        <input type="text" name="keyword" class="form-control" placeholder="Search Mahasiswa">
+    </div>
+    <div class="float-right my-2">
+        <button type="submit" class="btn btn-Success">
+            Search
+        </button>
+    </div>
+     </form>
+
  
  <table class="table table-bordered">
  <tr>
@@ -44,4 +57,5 @@
  </tr>
  @endforeach
  </table>
+ {{ $mahasiswa->links() }}
 @endsection

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MahasiswaController;
 use Illuminate\Support\Facades\DB;
@@ -18,11 +19,24 @@ class MahasiswaController extends Controller
     public function index()
     {
         //fungsi eloquent menampilkan data menggunakan pagination
-            $mahasiswa = $mahasiswa = DB::table('mahasiswa')->get(); // Mengambil semua isi tabel
-            $posts = Mahasiswa::orderBy('Nim', 'desc')->paginate(6);
-            return view('index', compact('mahasiswa'));
-            with('i', (request()->input('page', 1) - 1) * 5);
+        $mahasiswa = $mahasiswa = DB::table('mahasiswa')->get(); // Mengambil semua isi tabel
+        $posts = Mahasiswa::orderBy('Nim', 'desc');
+        //menambahkan paginate pada index
+        return view('index', [
+            'mahasiswa' => DB::table('mahasiswa')->paginate(3)
+        ]);
+
     }
+    
+    public function cari(\Illuminate\Http\Request $request)
+    {
+        $mahasiswa = mahasiswa::when($request->keyword, function ($query) use ($request) {
+            $query->where('nim', 'like', "%{$request->keyword}%")
+                ->orWhere('nama', 'like', "%{$request->keyword}%");
+        })->get();
+        return view('mahasiswa.detail', compact('mahasiswa'));
+    }
+
 
     /**
      * Show the form for creating a new resource.
